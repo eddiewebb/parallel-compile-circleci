@@ -29,10 +29,11 @@ jobs:
     docker:
       - image: circleci/openjdk:8-jdk
     steps:
+      - run: mkdir -p ~/.ssh/known_hosts && ssh-keyscan -H github.com >> ~/.ssh/known_hosts && chmod 0600 ~/.ssh/known_hosts
       - run: git clone git@github.com:eddiewebb/linux.git
 
   link:
     docker:
       - image: circleci/openjdk:8-jdk
     steps:
-      - run: git clone git@github.com:eddiewebb/linux.git
+      - run: echo ""
