@@ -33,11 +33,12 @@ jobs:
       - restore_cache:
           keys:
             - kernel-source
-      - run: git clone git@github.com:eddiewebb/linux.git .
+      - run: git clone --depth=1 git@github.com:eddiewebb/linux.git .
       - save_cache:
           key: kernel-source
           paths:
             - ".git"
+      - run: du -hs .
 
   link:
     docker:
