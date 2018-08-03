@@ -8,6 +8,9 @@ workflows:
       - compile:
           requires: 
             - info
+      - compile-2:
+          requires: 
+            - info
       - link:
           requires: 
             - compile
@@ -33,11 +36,21 @@ jobs:
       - restore_cache:
           keys:
             - kernel-source
-      - run: git clone --depth=1 git@github.com:eddiewebb/linux.git .
+      #- run: git clone --depth=1 git@github.com:eddiewebb/linux.git .
+      - run: git pull
       - save_cache:
           key: kernel-source
           paths:
             - ".git"
+      - run: du -hs .
+
+  compile-2:
+    #parallelism: 5
+    docker:
+      - image: circleci/openjdk:8-jdk
+    steps:
+      - run: mkdir -p ~/.ssh && ssh-keyscan -H github.com >> ~/.ssh/known_hosts && chmod 0600 ~/.ssh/known_hosts
+      - run: git clone --depth=1 git@github.com:eddiewebb/linux.git .
       - run: du -hs .
 
   link:
