@@ -27,24 +27,31 @@ jobs:
       - run: echo $CIRCLE_NODE_INDEX
       - run: set
 
+# cache restore takes longer than shallow clone
   compile:
-    #parallelism: 5
+    #parallelism: 2
     docker:
       - image: circleci/openjdk:8-jdk
     steps:
       - run: mkdir -p ~/.ssh && ssh-keyscan -H github.com >> ~/.ssh/known_hosts && chmod 0600 ~/.ssh/known_hosts
       - restore_cache:
           keys:
-            - kernel-source
-      #- run: git clone --depth=1 git@github.com:eddiewebb/linux.git .
-      - run: git pull
+            - kernel-source-shallow
+      - run: |
+          if [ -e .git ]
+          then
+            git remote set-url origin git@github.com:eddiewebb/linux.git || true
+            git pull
+          else
+            git clone --depth=1 git@github.com:eddiewebb/linux.git .
+          fi
       - save_cache:
-          key: kernel-source
+          key: kernel-source-shallow
           paths:
             - ".git"
       - run: du -hs .
 
-  compile-2:
+  compile:
     #parallelism: 5
     docker:
       - image: circleci/openjdk:8-jdk
@@ -52,6 +59,7 @@ jobs:
       - run: mkdir -p ~/.ssh && ssh-keyscan -H github.com >> ~/.ssh/known_hosts && chmod 0600 ~/.ssh/known_hosts
       - run: git clone --depth=1 git@github.com:eddiewebb/linux.git .
       - run: du -hs .
+      - run: make
 
   link:
     docker:
