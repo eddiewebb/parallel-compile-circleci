@@ -1,6 +1,6 @@
 #include <stdio.h>
  
-int main() {
+int bye() {
    printf("Until next time!\n");
    return 0;
 }
