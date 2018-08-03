@@ -24,9 +24,10 @@ jobs:
           while read LINE;do
             echo "Compiling" $LINE
             TIME=`gcc -ftime-report -c $LINE 2>&1 | grep TOTAL | tr -s " " | cut -d" " -f6`
-            echo "<testsuite file=\"$LINE\" time=\"$TIME\"/>" >>timing_body.xml
+            echo "<testsuite file=\"$LINE\"><testcase name=\"compile $LINE\" time=\"$TIME\" /></testsuite>" >>timing_body.xml
           done<file_list
       - run: mkdir gcc-timings && cat .circleci/timing_head.xml timing_body.xml .circleci/timing_foot.xml > gcc-timings/timing.xml
+      - run: cat gcc-timings/timing.xml
       - store_test_results:
           path: gcc-timings
       # move compiled files to specific folder and persist to workspace
