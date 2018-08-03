@@ -18,6 +18,7 @@ jobs:
       - image: gcc:8.2
     steps:
       - checkout
+      - run: apt-get update && apt-get install -y jq
       - run: echo "previous timings"  && cat $CIRCLE_INTERNAL_TASK_DATA/circle-test-results/results.json | jq '.'
       #split all c files based on the index ID we're running on, pass subset to gcc compile
       - run: circleci tests glob "**/*.c" | circleci tests split --split-by=timings > file_list
