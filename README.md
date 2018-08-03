@@ -11,4 +11,4 @@ See https://circleci.com/gh/eddiewebb/parallel-compile-circleci for example work
 
 ## Splitting by Timing
 
-It is possible to split the compilation across containers based on historical timing, please see the `parallel-compile-circleci` branch for examples.
+It is possible to split the compilation across containers based on historical timing, please see the [`split-by-timing`](https://github.com/eddiewebb/parallel-compile-circleci/tree/split-by-timing)] branch for examples.
