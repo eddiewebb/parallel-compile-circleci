@@ -31,7 +31,7 @@ jobs:
   compile:
     #parallelism: 2
     docker:
-      - image: circleci/openjdk:8-jdk
+      - image: gcc:8.2
     steps:
       - run: mkdir -p ~/.ssh && ssh-keyscan -H github.com >> ~/.ssh/known_hosts && chmod 0600 ~/.ssh/known_hosts
       - restore_cache:
@@ -54,7 +54,7 @@ jobs:
   compile-2:
     #parallelism: 5
     docker:
-      - image: circleci/openjdk:8-jdk
+      - image: gcc:8.2
     steps:
       - run: mkdir -p ~/.ssh && ssh-keyscan -H github.com >> ~/.ssh/known_hosts && chmod 0600 ~/.ssh/known_hosts
       - run: git clone --depth=1 git@github.com:eddiewebb/linux.git .
