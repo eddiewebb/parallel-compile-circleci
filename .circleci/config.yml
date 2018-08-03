@@ -45,7 +45,12 @@ jobs:
     steps:
       - attach_workspace:
           at: output
+      - run: ls -la output
       - run: mv output/* .
       - run: gcc -o program *.o
+      - run: ls -la
+      - run: ./program
+      - store_artifacts:
+          path: program
 
 
