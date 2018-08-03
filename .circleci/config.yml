@@ -8,9 +8,6 @@ workflows:
       - compile:
           requires: 
             - info
-      - compile-2:
-          requires: 
-            - info
       - link:
           requires: 
             - compile
@@ -29,40 +26,26 @@ jobs:
 
 # cache restore takes longer than shallow clone
   compile:
-    #parallelism: 2
+    parallelism: 2
     docker:
       - image: gcc:8.2
     steps:
-      - run: mkdir -p ~/.ssh && ssh-keyscan -H github.com >> ~/.ssh/known_hosts && chmod 0600 ~/.ssh/known_hosts
-      - restore_cache:
-          keys:
-            - kernel-source-shallow
-      - run: |
-          if [ -e .git ]
-          then
-            git remote set-url origin git@github.com:eddiewebb/linux.git || true
-            git pull
-          else
-            git clone --depth=1 git@github.com:eddiewebb/linux.git .
-          fi
-      - save_cache:
-          key: kernel-source-shallow
+      - checkout
+      - circleci tests glob "**/*.c" | circleci tests split --split-by=filesize | xargs gcc -c 
+      - mkdir output && mv *.o output
+      - persist_to_workspace:
+          root: output
           paths:
-            - ".git"
-      - run: du -hs .
+            - *.o
 
-  compile-2:
-    #parallelism: 5
-    docker:
-      - image: gcc:8.2
-    steps:
-      - run: mkdir -p ~/.ssh && ssh-keyscan -H github.com >> ~/.ssh/known_hosts && chmod 0600 ~/.ssh/known_hosts
-      - run: git clone --depth=1 git@github.com:eddiewebb/linux.git .
-      - run: du -hs .
-      - run: make
 
   link:
     docker:
       - image: circleci/openjdk:8-jdk
     steps:
-      - run: echo ""
+      - attach_workspace:
+          at: output
+      - run: mv output/* .
+      - run: gcc -o program *.o
+
+
