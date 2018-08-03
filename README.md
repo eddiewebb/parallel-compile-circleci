@@ -8,3 +8,4 @@ The compile machine code is then aggergated in a follow-up job that links them a
 See https://circleci.com/gh/eddiewebb/parallel-compile-circleci for example workflow result in CircleCI.
 
 [![CircleCI](https://circleci.com/gh/eddiewebb/parallel-compile-circleci.svg?style=svg)](https://circleci.com/gh/eddiewebb/parallel-compile-circleci)
+
