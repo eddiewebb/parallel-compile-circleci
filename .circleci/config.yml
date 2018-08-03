@@ -18,14 +18,13 @@ jobs:
       - image: gcc:8.2
     steps:
       - checkout
-      - run: cp .circleci/timing.json $CIRCLE_INTERNAL_TASK_DATA/circle-test-results/results.json
       #split all c files based on the index ID we're running on, pass subset to gcc compile
       - run: circleci tests glob "**/*.c" | circleci tests split --split-by=timings > file_list
       - run: |
           while read LINE;do
             echo "Compiling" $LINE
             TIME=`gcc -ftime-report -c $LINE 2>&1 | grep TOTAL | tr -s " " | cut -d" " -f6`
-            echo "<testcase classname=\"$LINE\" name=\"$LINE\" time=\"$TIME\"/>" >>timing_body.xml
+            echo "<testsuite file=\"$LINE\" time=\"$TIME\"/>" >>timing_body.xml
           done<file_list
       - run: mkdir gcc-timings && cat .circleci/timing_head.xml timing_body.xml .circleci/timing_foot.xml > gcc-timings/timing.xml
       - store_test_results:
