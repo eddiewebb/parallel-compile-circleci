@@ -1,0 +1,19 @@
+version: 2
+
+workflows:
+  version: 2
+  storage-test:
+    jobs:
+      - many
+
+
+jobs:
+  many:
+    parallelism: 5
+    docker:
+      - image: circleci/openjdk:8-jdk
+    steps:
+      - run: hostname
+      - run: echo $CIRCLE_NODE_TOTAL
+      - run: echo $CIRCLE_NODE_INDEX
+      - run: set
