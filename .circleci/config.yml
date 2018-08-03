@@ -25,12 +25,19 @@ jobs:
       - run: set
 
   compile:
-    parallelism: 5
+    #parallelism: 5
     docker:
       - image: circleci/openjdk:8-jdk
     steps:
-      - run: ssh-keyscan -H github.com >> ~/.ssh/known_hosts && chmod 0600 ~/.ssh/known_hosts
-      - run: git clone git@github.com:eddiewebb/linux.git
+      - run: mkdir -p ~/.ssh && ssh-keyscan -H github.com >> ~/.ssh/known_hosts && chmod 0600 ~/.ssh/known_hosts
+      - restore_cache:
+          keys:
+            - kernel-source
+      - run: git clone git@github.com:eddiewebb/linux.git .
+      - save_cache:
+          key: kernel-source
+          paths:
+            - ".git"
 
   link:
     docker:
