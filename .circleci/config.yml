@@ -51,7 +51,7 @@ jobs:
             - ".git"
       - run: du -hs .
 
-  compile:
+  compile-2:
     #parallelism: 5
     docker:
       - image: circleci/openjdk:8-jdk
