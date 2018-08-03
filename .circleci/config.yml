@@ -31,17 +31,17 @@ jobs:
       - image: gcc:8.2
     steps:
       - checkout
-      - circleci tests glob "**/*.c" | circleci tests split --split-by=filesize | xargs gcc -c 
-      - mkdir output && mv *.o output
+      - run: circleci tests glob "**/*.c" | circleci tests split --split-by=filesize | xargs gcc -c 
+      - run: mkdir output && mv *.o output
       - persist_to_workspace:
           root: output
           paths:
-            - *.o
+            - "*.o"
 
 
   link:
     docker:
-      - image: circleci/openjdk:8-jdk
+      - image: gcc:8.2
     steps:
       - attach_workspace:
           at: output
