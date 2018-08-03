@@ -2,14 +2,20 @@ version: 2
 
 workflows:
   version: 2
-  storage-test:
+  dist-compile:
     jobs:
-      - many
+      - info
+      - compile:
+          requires: 
+            - info
+      - link:
+          requires: 
+            - compile
 
 
 jobs:
-  many:
-    parallelism: 5
+  info:
+    parallelism: 2
     docker:
       - image: circleci/openjdk:8-jdk
     steps:
@@ -17,3 +23,16 @@ jobs:
       - run: echo $CIRCLE_NODE_TOTAL
       - run: echo $CIRCLE_NODE_INDEX
       - run: set
+
+  compile:
+    parallelism: 5
+    docker:
+      - image: circleci/openjdk:8-jdk
+    steps:
+      - run: git clone git@github.com:eddiewebb/linux.git
+
+  link:
+    docker:
+      - image: circleci/openjdk:8-jdk
+    steps:
+      - run: git clone git@github.com:eddiewebb/linux.git
